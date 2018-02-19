@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.pf4j.demo;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,76 +35,90 @@ import java.util.List;
  * @author Decebal Suiu
  */
 public class Boot {
-    private static final Logger logger = LoggerFactory.getLogger(Boot.class);
+  private static final Logger logger = LoggerFactory.getLogger(Boot.class);
+  final PluginManager pluginManager;
 
-    public static void main(String[] args) {
-        // print logo
-        printLogo();
+  public static void main(String[] args) {
+    // print logo
+    printLogo();
+    Boot boot = new Boot();
+    boot.doBoot();
+  }
 
-        // create the plugin manager
-        final PluginManager pluginManager = new DefaultPluginManager() {
-          @Override
-          protected CompoundPluginDescriptorFinder createPluginDescriptorFinder() {
-            return new CompoundPluginDescriptorFinder()
-                // Demo is using the Manifest file
-                // PropertiesPluginDescriptorFinder is commented out just to avoid error log
-                //.add(new PropertiesPluginDescriptorFinder())
-                .add(new ManifestPluginDescriptorFinder());
-          }
-        };
+  public Boot() {
+    pluginManager = new DefaultPluginManager() {
+      @Override
+      protected CompoundPluginDescriptorFinder createPluginDescriptorFinder() {
+        return new CompoundPluginDescriptorFinder()
+            // Demo is using the Manifest file
+            // PropertiesPluginDescriptorFinder is commented out just to avoid error log
+            //.add(new PropertiesPluginDescriptorFinder())
+            .add(new ManifestPluginDescriptorFinder());
+      }
+    };
+  }
 
-        // load the plugins
-        pluginManager.loadPlugins();
+  public PluginManager getPluginManager() {
+    return pluginManager;
+  }
 
-        // enable a disabled plugin
+  public void doBoot() {
+    // create the plugin manager
+
+
+    // load the plugins
+    pluginManager.loadPlugins();
+
+    // enable a disabled plugin
 //        pluginManager.enablePlugin("welcome-plugin");
 
-        // start (active/resolved) the plugins
-        pluginManager.startPlugins();
+    // start (active/resolved) the plugins
+    pluginManager.startPlugins();
 
-        logger.info("Plugindirectory: ");
-        logger.info("\t" + System.getProperty("pf4j.pluginsDir", "plugins") + "\n");
+    logger.info("Plugindirectory boot: ");
+    logger.info("\t" + System.getProperty("pf4j.pluginsDir", "plugins") + "\n");
 
-        // retrieves the extensions for Greeting extension point
-        List<Greeting> greetings = pluginManager.getExtensions(Greeting.class);
-        logger.info(String.format("Found %d extensions for extension point '%s'", greetings.size(), Greeting.class.getName()));
-        for (Greeting greeting : greetings) {
-            logger.info(">>> " + greeting.getGreeting());
-        }
-
-        // // print extensions from classpath (non plugin)
-        // logger.info(String.format("Extensions added by classpath:"));
-        // Set<String> extensionClassNames = pluginManager.getExtensionClassNames(null);
-        // for (String extension : extensionClassNames) {
-        //     logger.info("   " + extension);
-        // }
-
-        // print extensions for each started plugin
-        List<PluginWrapper> startedPlugins = pluginManager.getStartedPlugins();
-        for (PluginWrapper plugin : startedPlugins) {
-            String pluginId = plugin.getDescriptor().getPluginId();
-            logger.info(String.format("Extensions added by plugin '%s':", pluginId));
-            // extensionClassNames = pluginManager.getExtensionClassNames(pluginId);
-            // for (String extension : extensionClassNames) {
-            //     logger.info("   " + extension);
-            // }
-        }
-
-        logger.info("Plugins should keep running!");
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> pluginManager.stopPlugins()));
-
-        try {
-            Thread.currentThread().join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    // retrieves the extensions for Greeting extension point
+    List<Greeting> greetings = pluginManager.getExtensions(Greeting.class);
+    logger.info(String.format("Found %d extensions for extension point '%s'", greetings.size(), Greeting.class
+        .getName()));
+    for (Greeting greeting : greetings) {
+      logger.info(">>> " + greeting.getGreeting());
     }
 
-	private static void printLogo() {
-    	logger.info(StringUtils.repeat("#", 40));
-    	logger.info(StringUtils.center("PF4J-DEMO", 40));
-    	logger.info(StringUtils.repeat("#", 40));
-	}
+    // // print extensions from classpath (non plugin)
+    // logger.info(String.format("Extensions added by classpath:"));
+    // Set<String> extensionClassNames = pluginManager.getExtensionClassNames(null);
+    // for (String extension : extensionClassNames) {
+    //     logger.info("   " + extension);
+    // }
+
+    // print extensions for each started plugin
+    List<PluginWrapper> startedPlugins = pluginManager.getStartedPlugins();
+    for (PluginWrapper plugin : startedPlugins) {
+      String pluginId = plugin.getDescriptor().getPluginId();
+      logger.info(String.format("Extensions added by plugin '%s':", pluginId));
+      // extensionClassNames = pluginManager.getExtensionClassNames(pluginId);
+      // for (String extension : extensionClassNames) {
+      //     logger.info("   " + extension);
+      // }
+    }
+
+    logger.info("Plugins should keep running!");
+
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> pluginManager.stopPlugins()));
+
+    try {
+      Thread.currentThread().join();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private static void printLogo() {
+    logger.info(StringUtils.repeat("#", 40));
+    logger.info(StringUtils.center("PF4J-DEMO", 40));
+    logger.info(StringUtils.repeat("#", 40));
+  }
 
 }

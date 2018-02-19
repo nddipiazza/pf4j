@@ -27,7 +27,7 @@ import org.pf4j.demo.api.Greeting;
  *
  * @author Decebal Suiu
  */
-public class HelloPlugin extends Plugin {
+    public class HelloPlugin extends Plugin {
     private static final Logger logger = LoggerFactory.getLogger(HelloPlugin.class);
 
     public HelloPlugin(PluginWrapper wrapper) {
@@ -38,7 +38,7 @@ public class HelloPlugin extends Plugin {
     public void start() {
         Runnable task = () -> {
             while (true) {
-                System.out.println("apples");
+                System.out.println("test5!");
                 try {
                     Thread.sleep(1000L);
                 } catch (InterruptedException e) {
