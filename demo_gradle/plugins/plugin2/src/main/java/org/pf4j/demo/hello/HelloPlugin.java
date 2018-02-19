@@ -36,7 +36,17 @@ public class HelloPlugin extends Plugin {
 
     @Override
     public void start() {
-        logger.info("HelloPlugin.start()");
+        Runnable task = () -> {
+            while (true) {
+                System.out.println("apples");
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        task.run();
     }
 
     @Override
@@ -49,8 +59,8 @@ public class HelloPlugin extends Plugin {
 
     	@Override
         public String getGreeting() {
-            return "Hello";
-        }
+    	    return "Greetings!";
+      }
 
     }
 

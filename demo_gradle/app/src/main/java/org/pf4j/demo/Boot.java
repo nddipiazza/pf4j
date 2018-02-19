@@ -89,18 +89,15 @@ public class Boot {
             // }
         }
 
-        // stop the plugins
-        pluginManager.stopPlugins();
-        /*
-        Runtime.getRuntime().addShutdownHook(new Thread() {
+        logger.info("Plugins should keep running!");
 
-			@Override
-			public void run() {
-				pluginManager.stopPlugins();
-			}
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> pluginManager.stopPlugins()));
 
-        });
-        */
+        try {
+            Thread.currentThread().join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 	private static void printLogo() {
