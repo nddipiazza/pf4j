@@ -44,7 +44,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
     public void start() {
         task = new Thread(() -> {
             while (!stop.get()) {
-                logger.info(StringUtils.upperCase("Hello Plugin!!"));
+                logger.info(StringUtils.upperCase("Hello Plugin!! xxxooo"));
                 try {
                     Thread.sleep(1000L);
                 } catch (InterruptedException e) {

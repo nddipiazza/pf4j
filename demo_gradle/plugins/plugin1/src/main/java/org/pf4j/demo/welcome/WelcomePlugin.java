@@ -45,7 +45,7 @@ public class WelcomePlugin extends Plugin {
     logger.info("WelcomePlugin.start()");
     task = new Thread(() -> {
       while (!stop.get()) {
-        logger.info(StringUtils.upperCase("Welcome Plugin!!"));
+        logger.info(StringUtils.upperCase("Welcome Plugin!! xxxooo"));
         try {
           Thread.sleep(1000L);
         } catch (InterruptedException e) {
